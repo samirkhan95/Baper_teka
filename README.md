@@ -1,22 +1,22 @@
-# 💰 Baper Teka (baper_teka)
+# 💰 Baper Teka — Personal Finance Tracker & Money Flow Analytics
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.11.5-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/Dart-3.0+-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
-[![Android](https://img.shields.io/badge/Android-5.0+-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com)
-[![Architecture](https://img.shields.io/badge/Architecture-Clean%20Provider%20%2B%20SQLite-ff69b4?style=for-the-badge)](https://flutter.dev)
-[![License](https://img.shields.io/badge/License-Portfolio%20%26%20Showcase-purple?style=for-the-badge)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-success?style=for-the-badge)](#)
+[![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
+[![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20Cross--Platform-green?style=for-the-badge&logo=android)](https://android.com)
+[![Architecture](https://img.shields.io/badge/Architecture-Clean%20%2B%20Provider-orange?style=for-the-badge)](https://pub.dev/packages/provider)
+[![Status](https://img.shields.io/badge/Build-Release%20Ready-brightgreen?style=for-the-badge)]()
 
-> **Baper Teka** is a premium personal finance tracking and bank card reconciliation application built for Android with Flutter. Featuring a dual theme system (Modern Minimalist & Nostalgic 8-Bit Retro), interactive Monthly Money Flow Analytics, local SQLite persistence, PDF statement generation, and full offline data backup/restore capabilities.
+**Baper Teka** is a premium personal finance tracking and bank card reconciliation application built for Android with Flutter. Featuring a dual theme system (Modern Minimalist & Nostalgic 8-Bit Retro), interactive Monthly Money Flow Analytics, local SQLite persistence, PDF statement generation, and full offline data backup/restore capabilities.
 
 ---
 
-## 📥 Download Release APK
+## 📱 Try the Live App (Release APK)
 
-Get the pre-built, production-ready Android APK directly from GitHub Releases or the repository root:
+You can experience the fully compiled app directly on your Android device without building from source:
 
-- **[Direct Release APK Download (v1.0.0)](https://github.com/samirkhan95/Baper_teka/releases/latest)**
-- **[Local Repository APK](./app-release.apk)**
+📥 **[Download Latest Release APK](https://github.com/samirkhan95/Baper_teka/releases/latest)**
+
+> **Note for Reviewers & Recruiters:** This showcase repository highlights the architecture, design system, and core technical implementations of Baper Teka. The production-ready pre-built APK is provided above for full hands-on testing.
 
 ---
 
@@ -36,13 +36,29 @@ Get the pre-built, production-ready Android APK directly from GitHub Releases or
   - **Retro Theme**: Nostalgic 8-Bit Cyber-Retro UI complete with custom retro cards, retro buttons, and custom pixel-perfect typography.
 - 📄 **PDF Statement Export**:
   - Generate formatted monthly financial statements in PDF format with automated total computations.
-- 💾 **Data Privacy & Backup**:
+- 🔒 **Local-First Privacy & Backup**:
   - 100% offline local SQLite database (`sqflite`).
   - Full backup & restore via JSON export/import.
 
 ---
 
-## 🏗️ Architecture & Project Structure
+## 📸 App Screenshots
+
+| Dashboard & Cards | Money Flow Graph & Summary | Expense Breakdown | Retro Mode Theme |
+| :---: | :---: | :---: | :---: |
+| *(Add Screenshot)* | *(Add Screenshot)* | *(Add Screenshot)* | *(Add Screenshot)* |
+
+---
+
+## 🛠️ Tech Stack & Architecture
+
+- **Framework:** [Flutter](https://flutter.dev/) (Dart)
+- **State Management:** [`provider`](https://pub.dev/packages/provider)
+- **Local Database:** [`sqflite`](https://pub.dev/packages/sqflite)
+- **PDF Generation:** [`pdf`](https://pub.dev/packages/pdf) & [`printing`](https://pub.dev/packages/printing)
+- **Data Visualization:** Custom Native `CustomPainter` Monotone Spline Engine
+- **UI & Styling:** Dual Theme Engine (Modern Material 3 + 8-Bit Retro)
+- **Architecture Pattern:** Clean Layered Architecture (Provider Pattern)
 
 ```
 lib/
@@ -79,7 +95,7 @@ lib/
 
 ---
 
-## 💻 Code Highlights
+## 💡 Showcase Code Snippets
 
 ### 1. Shape-Preserving Monotone Curve Interpolation
 ```dart
@@ -105,7 +121,7 @@ Path computeSmoothPath(List<Offset> pts) {
 }
 ```
 
-### 2. Isolated Monthly Financial Calculator
+### 2. Pure Business Logic Engine (`MonthlyFlowCalculator`)
 ```dart
 final flowData = MonthlyFlowCalculator.computeMonthlyFlow(
   allTransactions: provider.transactions,
@@ -113,44 +129,61 @@ final flowData = MonthlyFlowCalculator.computeMonthlyFlow(
 );
 ```
 
----
+### 3. Clean State Management (`AppProvider`)
+```dart
+class AppProvider with ChangeNotifier {
+  List<BankCard> _cards = [];
+  List<AppTransaction> _transactions = [];
+  bool _isRetroMode = false;
+  bool _isDarkMode = false;
+  final DBHelper _dbHelper = DBHelper();
 
-## 🛠️ Build & Setup Instructions
+  double get cashOnHand => totalWithdrawn - totalSpent;
 
-### Prerequisites
-- Flutter SDK `^3.11.5`
-- Dart SDK `^3.0.0`
-- Android SDK 21+
-
-### Installation
-```bash
-# Clone repository
-git clone https://github.com/samirkhan95/Baper_teka.git
-cd Baper_teka
-
-# Install dependencies
-flutter pub get
-
-# Run application
-flutter run
-
-# Run unit & widget tests
-flutter test
-
-# Build release APK
-flutter build apk --release
+  Future<void> loadData() async {
+    _cards = await _dbHelper.getCards();
+    _transactions = await _dbHelper.getTransactions();
+    notifyListeners();
+  }
+}
 ```
 
 ---
 
-## 👨‍💻 Author
+## 🚀 How to Build Release APK
 
-**Samir Khan**
-- **GitHub**: [@samirkhan95](https://github.com/samirkhan95)
-- **Role**: Software Engineer / Android & Mobile Developer
+To generate the release build for testing on Android:
+
+```bash
+# 1. Clean build artifacts
+flutter clean
+
+# 2. Get dependencies
+flutter pub get
+
+# 3. Build optimized Release APK
+flutter build apk --release
+```
+
+The output binary will be located at:
+`build/app/outputs/flutter-apk/app-release.apk`
 
 ---
 
-## 📜 License
+## 💼 Showcase Repository Notice
 
-This project is licensed under the **Portfolio & Showcase License** - see the [LICENSE](LICENSE) file for details.
+This repository serves as a **Portfolio & Architecture Showcase** for project evaluation. 
+
+- Core UI widgets, data models, state providers, and design tokens are included to showcase code quality and engineering standards.
+- Pre-built binary releases are available under the [Releases](https://github.com/samirkhan95/Baper_teka/releases) tab.
+
+---
+
+## 👤 Author
+
+Developed by **Samir Khan**  
+- GitHub: [@samirkhan95](https://github.com/samirkhan95)
+
+---
+
+*Made with ❤️ using Flutter.*
